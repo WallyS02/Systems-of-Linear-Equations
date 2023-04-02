@@ -20,18 +20,6 @@ def Vector(size, f):
     return [math.sin(i * (f + 1)) for i in range(size)]
 
 
-"""def matvecmul(matrix, vector):
-    if len(vector) != len(matrix[0]):
-        raise "Matrix and vector sizes wrong!"
-    result = [0 for _ in range(len(matrix))]
-    for i in range(len(matrix)):
-        res = 0
-        for j in range(len(vector)):
-            res += matrix[i][j] * vector[j]
-        result[i] = res
-    return result"""
-
-
 def matvecmul(matrix, vector):
     if len(vector) != len(matrix[0]):
         raise ValueError("Matrix and vector sizes wrong!")
@@ -42,15 +30,6 @@ def matvecmul(matrix, vector):
         result[i] = res
 
     return result
-
-
-"""def vecvecsub(vector1, vector2):
-    if len(vector1) != len(vector2):
-        raise "Vectors sizes wrong!"
-    result = [0 for _ in range(len(vector1))]
-    for i in range(len(vector1)):
-        result[i] = vector1[i] - vector2[i]
-    return result"""
 
 
 def vecvecsub(vector1, vector2):
@@ -135,24 +114,11 @@ def main():
     e = 5
     N = 986
     f = 8
-    """A = Matrix(N, 5 + e, -1, -1)
-    b = Vector(N, f)"""
+    A = Matrix(N, 5 + e, -1, -1)
+    b = Vector(N, f)
     treshold = 1e-9
 
     # B
-    """jacobi_result = Jacobi(A, b, treshold)
-    print("Jacobi method:")
-    print("Iterations: ", jacobi_result[1])
-    print("Duration [s]: ", jacobi_result[2])
-    print("Norm of residual vector: ", jacobi_result[3])
-    gauss_seidl_result = Gauss_Seidl(A, b, treshold)
-    print("Gauss-Seidl method:")
-    print("Iterations: ", gauss_seidl_result[1])
-    print("Duration [s]: ", gauss_seidl_result[2])
-    print("Norm of residual vector: ", gauss_seidl_result[3])"""
-
-    # C
-    """A = Matrix(N, 3, -1, -1)
     jacobi_result = Jacobi(A, b, treshold)
     print("Jacobi method:")
     print("Iterations: ", jacobi_result[1])
@@ -162,14 +128,27 @@ def main():
     print("Gauss-Seidl method:")
     print("Iterations: ", gauss_seidl_result[1])
     print("Duration [s]: ", gauss_seidl_result[2])
-    print("Norm of residual vector: ", gauss_seidl_result[3])"""
+    print("Norm of residual vector: ", gauss_seidl_result[3])
+
+    # C
+    A = Matrix(N, 3, -1, -1)
+    jacobi_result = Jacobi(A, b, treshold)
+    print("Jacobi method:")
+    print("Iterations: ", jacobi_result[1])
+    print("Duration [s]: ", jacobi_result[2])
+    print("Norm of residual vector: ", jacobi_result[3])
+    gauss_seidl_result = Gauss_Seidl(A, b, treshold)
+    print("Gauss-Seidl method:")
+    print("Iterations: ", gauss_seidl_result[1])
+    print("Duration [s]: ", gauss_seidl_result[2])
+    print("Norm of residual vector: ", gauss_seidl_result[3])
 
     # D
-    """A = Matrix(N, 3, -1, -1)
+    A = Matrix(N, 3, -1, -1)
     lu_factorization_result = LU_Factorization(A, b)
     print("LU Factorization method:")
     print("Duration [s]: ", lu_factorization_result[1])
-    print("Norm of residual vector: ", lu_factorization_result[2])"""
+    print("Norm of residual vector: ", lu_factorization_result[2])
 
     # E
     N = [100, 500, 1000, 2000, 3000]
