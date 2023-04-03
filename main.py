@@ -55,16 +55,28 @@ def Jacobi(A, b, treshold):
     n = len(b)
     x = ones(n)
     res_norm = float('inf')
-    start = time.time()
-    while res_norm >= treshold or math.isnan(res_norm):
-        iters += 1
-        x_previous = x.copy()
-        for i in range(n):
-            S = sum(A[i][j] * x_previous[j] for j in range(n) if j != i)
-            x[i] = (b[i] - S) / A[i][i]
-        res_norm = norm(residuum(A, x, b))
-    end = time.time()
-    duration = end - start
+    norms = []
+    try:
+        start = time.time()
+        while res_norm >= treshold or math.isnan(res_norm):
+            x_previous = x.copy()
+            for i in range(n):
+                S = sum(A[i][j] * x_previous[j] for j in range(n) if j != i)
+                x[i] = (b[i] - S) / A[i][i]
+            res_norm = norm(residuum(A, x, b))
+            norms.append(res_norm)
+            iters += 1
+        end = time.time()
+        duration = end - start
+    finally:
+        iters_x = [i for i in range(iters)]
+        plt.plot(iters_x, norms)
+        plt.xlabel("iterations")
+        plt.ylabel("norm of residuum vector")
+        plt.legend(["Jacobi method"])
+        plt.title("Changes of norm of residuum vector over iterations")
+        plt.tight_layout()
+        plt.show()
     return x, iters, duration, res_norm
 
 
@@ -73,16 +85,28 @@ def Gauss_Seidl(A, b, treshold):
     n = len(b)
     x = ones(n)
     res_norm = float('inf')
-    start = time.time()
-    while res_norm >= treshold or math.isnan(res_norm):
-        iters += 1
-        x_previous = x.copy()
-        for i in range(n):
-            S = sum(A[i][j] * x[j] for j in range(i)) + sum(A[i][j] * x_previous[j] for j in range(i + 1, n))
-            x[i] = (b[i] - S) / A[i][i]
-        res_norm = norm(residuum(A, x, b))
-    end = time.time()
-    duration = end - start
+    norms = []
+    try:
+        start = time.time()
+        while res_norm >= treshold or math.isnan(res_norm):
+            x_previous = x.copy()
+            for i in range(n):
+                S = sum(A[i][j] * x[j] for j in range(i)) + sum(A[i][j] * x_previous[j] for j in range(i + 1, n))
+                x[i] = (b[i] - S) / A[i][i]
+            res_norm = norm(residuum(A, x, b))
+            norms.append(res_norm)
+            iters += 1
+        end = time.time()
+        duration = end - start
+    finally:
+        iters_x = [i for i in range(iters)]
+        plt.plot(iters_x, norms)
+        plt.xlabel("iterations")
+        plt.ylabel("norm of residuum vector")
+        plt.legend(["Gauss-Seidl method"])
+        plt.title("Changes of norm of residuum vector over iterations")
+        plt.tight_layout()
+        plt.show()
     return x, iters, duration, res_norm
 
 
@@ -154,6 +178,8 @@ def main():
     N = [100, 500, 1000, 2000, 3000]
     jacobi_time = []
     gauss_seidl_time = []
+    jacobi_iterations = []
+    gauss_seidl_iterations = []
     lu_time = []
     for n in N:
         print("N: ", n)
@@ -163,10 +189,12 @@ def main():
         print("Jacobi method:")
         print("Duration: ", jacobi_result[2])
         jacobi_time.append(jacobi_result[2])
+        jacobi_iterations.append(jacobi_result[1])
         gauss_seidl_result = Gauss_Seidl(A, b, treshold)
         print("Gauss-Seidl method:")
         print("Duration: ", gauss_seidl_result[2])
         gauss_seidl_time.append(gauss_seidl_result[2])
+        gauss_seidl_iterations.append(gauss_seidl_result[1])
         lu_factorization_result = LU_Factorization(A, b)
         print("LU Factorization method:")
         print("Duration: ", lu_factorization_result[1])
@@ -175,10 +203,18 @@ def main():
     plt.plot(N, jacobi_time)
     plt.plot(N, gauss_seidl_time)
     plt.plot(N, lu_time)
-    plt.xlabel("liczba niewiadomych")
-    plt.ylabel("czas [s]")
-    plt.legend(["Jacobi method", "Gauss-Seidl method", "LU Factorization"])
+    plt.xlabel("number of variables")
+    plt.ylabel("time [s]")
+    plt.legend(["Jacobi method", "Gauss-Seidl method"]) # , "LU Factorization"])
     plt.title("The dependance of the duration algorithms on the number of variables")
+    plt.tight_layout()
+    plt.show()
+    plt.plot(N, jacobi_iterations)
+    plt.plot(N, gauss_seidl_iterations)
+    plt.xlabel("number of variables")
+    plt.ylabel("number of iterations")
+    plt.legend(["Jacobi method", "Gauss-Seidl method"])
+    plt.title("The dependance of the iterations in algorithms on the number of variables")
     plt.tight_layout()
     plt.show()
 
