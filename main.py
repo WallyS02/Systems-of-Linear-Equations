@@ -71,6 +71,7 @@ def Jacobi(A, b, treshold):
     finally:
         iters_x = [i for i in range(iters)]
         plt.plot(iters_x, norms)
+        plt.yscale("log")
         plt.xlabel("iterations")
         plt.ylabel("norm of residuum vector")
         plt.legend(["Jacobi method"])
@@ -101,6 +102,7 @@ def Gauss_Seidl(A, b, treshold):
     finally:
         iters_x = [i for i in range(iters)]
         plt.plot(iters_x, norms)
+        plt.yscale("log")
         plt.xlabel("iterations")
         plt.ylabel("norm of residuum vector")
         plt.legend(["Gauss-Seidl method"])
